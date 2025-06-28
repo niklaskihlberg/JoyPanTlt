@@ -41,9 +41,11 @@ struct ConfigurationView: View {
       List(SettingsTab.allCases, id: \.self, selection: $selectedTab) { tab in
         Label(tab.rawValue, systemImage: tab.icon)
           .tag(tab)
+          .padding(.vertical, 4)  // FIX: Lägg till vertikal padding
+          .padding(.horizontal, 8)  // FIX: Lägg till horisontell padding
       }
       .listStyle(SidebarListStyle())
-      .frame(minWidth: 150)
+      .frame(minWidth: 180)  // FIX: Öka minWidth för att ge mer utrymme
       
       // Main content area - delegera till respektive konfiguration
       Group {
@@ -61,25 +63,9 @@ struct ConfigurationView: View {
       .frame(minWidth: 400, minHeight: 300)
     }
     .navigationTitle("Settings")
-    .toolbar {
-      ToolbarItem(placement: .cancellationAction) {
-        Button("Close") {
-          closeWindow()
-        }
-        .keyboardShortcut(.escape)
-      }
-    }
-  }
-  
-  // MARK: - Window Management
-  private func closeWindow() {
-    DispatchQueue.main.async {
-      if let window = NSApplication.shared.keyWindow {
-        window.close()
-      }
-    }
   }
 }
+
 
 #Preview {
   ConfigurationView()

@@ -2,6 +2,9 @@
 
 A real-time joystick to OSC (Open Sound Control) and MIDI converter application for macOS. Control your audio/visual software, synthesizers, and digital audio workstations using joystick input with customizable mapping and routing.
 
+![JoyPanTlt Main Interface](Screenshots/screenshot-main-interface.png)
+
+
 ## Features
 
 - Real-time joystick input
@@ -32,6 +35,10 @@ A real-time joystick to OSC (Open Sound Control) and MIDI converter application 
 ## Configuration
 
 Configuration files are stored in `~/Library/Application Support/JoyPanTlt/`
+
+## TODO
+
+- Joystick graphics when using more then 1 virual joystick
 
 ## Acknowledgments
 

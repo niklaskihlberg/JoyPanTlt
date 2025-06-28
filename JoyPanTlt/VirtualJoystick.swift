@@ -9,9 +9,9 @@ import SwiftUI
 
 // MARK: - Input Method Enum
 enum InputMethod {
-    case none
-    case mouse
-    case keyboard
+  case none
+  case mouse
+  case keyboard
 }
 
 struct VirtualJoystick: View {
@@ -92,8 +92,9 @@ struct VirtualJoystick: View {
           .fill(knobColor)
           .frame(width: knobSize, height: knobSize)
           .offset(x: effectiveKnobPosition.x, y: effectiveKnobPosition.y)
-          .scaleEffect(isDragging ? 1.1 : 1.0)
-          .animation(.easeInOut(duration: 0.1), value: isDragging)
+          .scaleEffect(isDragging ? 1.125 : 1.0)
+          .animation(.easeInOut(duration: 0.125), value: isDragging)
+          .shadow(color: Color.black.opacity(0.32), radius: 24, x: 4, y: 4) // SKugga
       }
       .gesture(
         DragGesture(minimumDistance: 0)
@@ -104,7 +105,7 @@ struct VirtualJoystick: View {
             handleMouseEnd()
           }
       )
-//      .focusable(true)
+      //      .focusable(true)
       .focusable(false)
       .onKeyPress(phases: .all) { keyPress in
         return handleKeyPress(keyPress)

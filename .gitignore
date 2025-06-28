@@ -119,3 +119,7 @@ Temporary Items
 # Project specific
 config.json
 *.log
+update-copilot-output.txt
+
+scratch
+update-copilot.sh
