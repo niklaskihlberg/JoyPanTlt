@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import SwiftUI
 
 struct PanTiltResult {
   let pan: Double    // -180° to +180°
@@ -19,20 +20,32 @@ class TranslationLogic {
   private static var accumulatedX: Double = 0.0
   private static var accumulatedY: Double = 0.0
   
-  // Känslighet för joystick-input
-  private static let sensitivityValue: Double = 0.125
+  // Temporary sensitivity storage
+  private static var currentSensitivity: Double = 0.5
+  
+  /// Sätt sensitivity från extern källa
+  static func setSensitivity(_ value: Double) {
+    currentSensitivity = value
+  }
   
   /// Konverterar joystick-input (x, y) till pan/tilt-värden
   /// - Parameter joystickPosition: CGPoint med x,y värden mellan -1.0 och 1.0
   /// - Returns: PanTiltResult med pan och tilt i grader
   static func convertJoystickToPanTilt(_ joystickPosition: CGPoint) -> PanTiltResult {
+    // Hämta sensitivity och invert-inställningar från VirtualJoystickManager
+    let joystickManager = VirtualJoystickManager.shared
+    let sensitivity = joystickManager.getSensitivity()
     
     let x = Double(joystickPosition.x)
     let y = Double(joystickPosition.y)
     
-    // Beräkna delta-värden med känslighet
-    let deltaX = x * sensitivityValue
-    let deltaY = y * sensitivityValue
+    // Applicera invert-inställningar INNAN beräkning
+    let adjustedX = joystickManager.configuration.invertPan ? -x : x
+    let adjustedY = joystickManager.configuration.invertTilt ? -y : y
+    
+    // Använd de justerade värdena för delta-beräkning
+    let deltaX = adjustedX * sensitivity
+    let deltaY = adjustedY * sensitivity
     
     // Ackumulera värdena
     accumulatedX += deltaX
@@ -53,7 +66,6 @@ class TranslationLogic {
     let tilt = magnitude * 90.0
     
     return PanTiltResult(pan: pan, tilt: tilt)
-    
   }
   
   /// Återställer ackumulerade värden till noll
@@ -65,24 +77,6 @@ class TranslationLogic {
   /// Returnerar aktuella ackumulerade värden
   static func getAccumulatedValues() -> (x: Double, y: Double) {
     return (accumulatedX, accumulatedY)
-  }
-  
-  /// Debug-funktion för att testa konverteringen
-  static func testConversion() {
-    let testPositions: [CGPoint] = [
-      CGPoint(x: 0, y: 0),          // Center
-      CGPoint(x: 0, y: -1),         // Down (0°)
-      CGPoint(x: 1, y: 0),          // Right (90°)
-      CGPoint(x: 0, y: 1),          // Up (180°)
-      CGPoint(x: -1, y: 0),         // Left (-90°)
-      CGPoint(x: 0.707, y: -0.707), // Down-Right (45°)
-    ]
-    
-    print("=== Translation Logic Test ===")
-    for position in testPositions {
-      let result = convertJoystickToPanTilt(position)
-      print("Input: (\(position.x), \(position.y)) -> Pan: \(String(format: "%.1f", result.pan))°, Tilt: \(String(format: "%.1f", result.tilt))°")
-    }
   }
 }
 

@@ -29,9 +29,22 @@
 		85107A222E0C4F8E002C8D6E /* JoyPanTltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoyPanTltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		85DF95302E0EDE4E00BF195F /* Exceptions for "JoyPanTlt" folder in "JoyPanTlt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 85107A092E0C4F8D002C8D6E /* JoyPanTlt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		85107A0C2E0C4F8D002C8D6E /* JoyPanTlt */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				85DF95302E0EDE4E00BF195F /* Exceptions for "JoyPanTlt" folder in "JoyPanTlt" target */,
+			);
 			path = JoyPanTlt;
 			sourceTree = "<group>";
 		};
@@ -398,7 +411,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JoyPanTlt/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs network access to send OSC messages to lighting software.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -423,7 +438,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JoyPanTlt/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs network access to send OSC messages to lighting software.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
