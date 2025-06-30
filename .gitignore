@@ -49,15 +49,22 @@ playground.xcworkspace
 .build/
 
 # CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-#
-# Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
+Pods/
+*.xcworkspace
+
+# SwiftPM
+.swiftpm/
+Package.resolved
+
+# Xcode user state
+*.xcuserstate
+
+# Environment files
+.env
+
+# IDE settings
+.idea/
+.vscode/
 
 # Carthage
 #
@@ -89,8 +96,12 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Xcode workspace user data
+*.xcuserdatad/
+
 # macOS
 .DS_Store
+**/.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -119,7 +130,21 @@ Temporary Items
 # Project specific
 config.json
 *.log
-update-copilot-output.txt
 
 scratch
-update-copilot.sh
+.copilot
+.copilotignore
+.gitignore
+
+# Distribution artifacts
+Distribution/
+build_and_distribute.sh
+build_and_test_run.sh
+create_dmg.sh
+
+
+
+
+
+
+

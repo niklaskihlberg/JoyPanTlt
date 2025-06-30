@@ -1,46 +1,45 @@
 # JoyPanTlt
 
-A real-time joystick to OSC (Open Sound Control) and MIDI converter application for macOS. Control your audio/visual software, synthesizers, and digital audio workstations using joystick input with customizable mapping and routing.
+Real-time virtual joystick controller for macOS that converts joystick/gamepad input to OSC (Open Sound Control) and/or MIDI output. For controlling dmx-software or other audio/visual software, synthesizers, digital audio workstations or live performance setups.
 
 ![JoyPanTlt Main Interface](Screenshots/screenshot-main-interface.png)
 
+## Overview
 
-## Features
+### Core Functionality
 
-- Real-time joystick input
-- OSC message output
-- MIDI Control Change (CC) and Note output
-- Multiple joystick support
-- Built with Swift and Core Audio/Core MIDI frameworks
+- **Real-time virtual joystick control**
+- **OSC message output**
+- **MIDI Control Change (CC) output**
+
+### Input Methods
+
+- **Mouse control** - Click and drag for positioning
+- **Keyboard control** - Arrow keys for directional control
+- **Gamepad support** - Connect external joysticks/gamepads
 
 ## Requirements
 
-- macOS 10.15 (Catalina) or later
-- Xcode 12.0 or later (for building from source)
+- **macOS 15.0 (Sequoia) or later** 
+- **Xcode 16.0 or later** (for building from source)
+- **Swift 5.0+** with SwiftUI support
 
 ## Installation
 
 ### From Source
+
 1. Clone this repository
 2. Open `JoyPanTlt.xcodeproj` in Xcode
-3. Build and run the project
+3. Build and run the project (⌘+R)
 
-## Usage
+### Basic Operation
 
-1. Connect your joystick/controller to your Mac
-2. Launch JoyPanTlt
-3. Configure your OSC and/or MIDI output settings
-4. Map joystick controls to desired OSC addresses or MIDI CC numbers
-
-## Configuration
-
-Configuration files are stored in `~/Library/Application Support/JoyPanTlt/`
-
-## TODO
-
-- Joystick graphics when using more then 1 virual joystick
-
-## Acknowledgments
-
-- Built using Swift and Apple's Core Audio/Core MIDI frameworks
-- OSC implementation based on SwiftOSC library
+- **Control joysticks** using:
+   - **Mouse**: Click and drag the joystick knob
+   - **Keyboard**: Use arrow keys (↑↓←→) for momentary directional control
+   - **Gamepad**: Connect a game controller
+- **Settings**
+   - Adjust joystick count and sensitivity
+   - Set OSC destinations (host/port/address)
+   - MIDI CC output
+   - Configure gamepad mappings
