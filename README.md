@@ -1,5 +1,7 @@
 # JoyPanTlt
 
+WIP
+
 Real-time virtual joystick controller for macOS that converts joystick/gamepad input to OSC (Open Sound Control) and/or MIDI output. For controlling dmx-software or other audio/visual software, synthesizers, digital audio workstations or live performance setups.
 
 ![JoyPanTlt Main Interface](Screenshots/screenshot-main-interface.png)
