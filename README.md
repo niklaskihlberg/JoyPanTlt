@@ -18,7 +18,7 @@ Real-time virtual joystick controller for macOS that converts joystick/gamepad i
 
 - **Mouse control** - Click and drag for positioning
 - **Keyboard control** - Arrow keys for directional control
-- **Gamepad support** - Connect external joysticks/gamepads
+**TODO: Gamepad support** - Connect external joysticks/gamepads
 
 ## Requirements
 
@@ -33,15 +33,3 @@ Real-time virtual joystick controller for macOS that converts joystick/gamepad i
 1. Clone this repository
 2. Open `JoyPanTlt.xcodeproj` in Xcode
 3. Build and run the project (⌘+R)
-
-### Basic Operation
-
-- **Control joysticks** using:
-   - **Mouse**: Click and drag the joystick knob
-   - **Keyboard**: Use arrow keys (↑↓←→) for momentary directional control
-   - **Gamepad**: Connect a game controller
-- **Settings**
-   - Adjust joystick count and sensitivity
-   - Set OSC destinations (host/port/address)
-   - MIDI CC output
-   - Configure gamepad mappings
