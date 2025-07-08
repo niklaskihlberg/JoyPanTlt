@@ -17,7 +17,7 @@ Real-time virtual joystick controller for macOS that converts joystick/gamepad i
 ### Input Methods
 
 - **Mouse control** - Click and drag for positioning
-- **Keyboard control** - Arrow keys for directional control
+- **Keyboard control** - Arrow keys for directional control  
 **TODO: Gamepad support** - Connect external joysticks/gamepads
 
 ## Requirements
