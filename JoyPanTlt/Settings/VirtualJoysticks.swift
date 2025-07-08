@@ -1,0 +1,363 @@
+//
+//  VirtualJoystickConfiguration.swift
+//  JoyPanTlt
+//
+//  Created by Niklas Kihlberg on 2025-06-25.
+//
+
+import Foundation
+import SwiftUI
+import Combine
+
+class VIRTUALJOYSTICKS: ObservableObject {
+  @Published var numberOfJoysticks: Int = 0 {
+    didSet { updateJoystickInstances() }
+  }
+  @Published var joystickInstances: [JOY] = []
+  
+  init() { updateJoystickInstances() }
+  
+  func resetToDefaults() {
+    numberOfJoysticks = 1
+    joystickInstances = []
+    updateJoystickInstances()
+  }
+  
+  private func updateJoystickInstances() {
+    if numberOfJoysticks < 1 { numberOfJoysticks = 1 }
+    let currentCount = joystickInstances.count
+    if numberOfJoysticks > currentCount {
+      joystickInstances.append(JOY(numberOfJoysticks: numberOfJoysticks))
+    } else if numberOfJoysticks < currentCount {
+      joystickInstances = Array(joystickInstances.prefix(numberOfJoysticks))
+    }
+  }
+  
+  func updateJoystick(_ joystick: JOY) {
+    if let index = joystickInstances.firstIndex(where: { $0.id == joystick.id }) {
+      joystickInstances[index] = joystick
+    }
+  }
+  
+  class JOY: ObservableObject, Identifiable {
+    @EnvironmentObject var osc: OSC
+    @EnvironmentObject var midi: MIDI
+    
+    @Published var id = UUID()
+    @Published var name: String
+    @Published var number: String
+    init(numberOfJoysticks: Int) {
+      self.name = "Joystick \(numberOfJoysticks)"
+      self.number = "\(numberOfJoysticks)"
+    }
+    
+    @Published var sensitivity: Double = 0.005
+    @Published var invertX: Bool = false
+    @Published var invertY: Bool = false
+    @Published var deadzone: Double = 0.1
+    @Published var damping: Double = 0.8
+    
+    @Published var X: Double = 0.0
+    @Published var Y: Double = 0.0
+    
+    @Published var oscEnabled: Bool = false
+    @Published var oscPanAddress: String = "/fixture/selected/overrides/panAngle"
+    @Published var oscTiltAddress: String = "/fixture/selected/overrides/tiltAngle"
+    @Published var panOffsetEnabled: Bool = false
+    @Published var tiltOffsetEnabled: Bool = false
+    @Published var panOffset: Double = 0.0
+    @Published var tiltOffset: Double = 0.0
+    
+    @Published var midiEnabled: Bool = false
+    @Published var midiChannel: Int = 1
+    @Published var midiCCX: Int = 1
+    @Published var midiCCY: Int = 2
+    
+    func resetPosition() {
+      self.X = 0.0
+      self.Y = 0.0
+      self.osc.sendPanTilt(
+        panAddress: self.oscPanAddress,
+        panValue: 0,
+        tiltAddress: self.oscTiltAddress,
+        tiltValue: 0
+      )
+      self.midi.sendControlChange(
+        channel: Int(self.midiChannel),
+        controller: Int(self.midiCCX),
+        value: Int(0)
+      )
+      self.midi.sendControlChange(
+        channel: Int(self.midiChannel),
+        controller: Int(self.midiCCY),
+        value: Int(0)
+      )
+    }
+  }
+}
+
+struct JoystickWidget: View {
+
+  @State private var pressedKeys = Set<UInt16>()
+
+  private func directionFromKeys() -> CGPoint? {
+    var dx: CGFloat = 0
+    var dy: CGFloat = 0
+    if pressedKeys.contains(123) { dx -= 1 } // vänster
+    if pressedKeys.contains(124) { dx += 1 } // höger
+    if pressedKeys.contains(125) { dy += 1 } // ner
+    if pressedKeys.contains(126) { dy -= 1 } // upp
+    if dx == 0 && dy == 0 { return nil }
+    let length = sqrt(dx*dx + dy*dy)
+    return CGPoint(x: dx/length * maxDistance, y: dy/length * maxDistance)
+  }
+
+
+  @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
+  let index: Int
+  @ObservedObject var joystick: VIRTUALJOYSTICKS.JOY
+  let onPositionChanged: (CGPoint) -> Void
+  
+  @State private var position: CGPoint = .zero
+  @State private var isDragging: Bool = false
+  @State private var ValueUpdateTimer: Timer?
+  
+  let washerSize: Double = 145
+  let knobSize: Double = 90
+  let snapBackSpeed: Double = 0.25
+  
+  private var knobColor: Color { Color.gray }
+  private var updateInterval: TimeInterval = 0.05
+  private var radius: CGFloat { washerSize / 2 }
+  private var knobRadius: CGFloat { knobSize / 2 }
+  private var maxDistance: CGFloat { radius - knobRadius }
+  
+  init(
+    index: Int,
+    joystick: VIRTUALJOYSTICKS.JOY,
+    onPositionChanged: @escaping (CGPoint) -> Void = { _ in }
+  ) {
+    self.index = index
+    self.joystick = joystick
+    self.onPositionChanged = onPositionChanged
+  }
+  
+  var body: some View {
+    VStack(spacing: 16) {
+      ZStack {
+        Circle()
+          .fill(Color.white.opacity(0.0625))
+          .frame(width: washerSize, height: washerSize)
+        Circle()
+          .fill(knobColor)
+          .frame(width: knobSize, height: knobSize)
+          .offset(x: position.x, y: position.y)
+          .scaleEffect(isDragging ? 1.0625 : 1.0)
+          .animation(.easeInOut(duration: 0.125), value: isDragging)
+          .shadow(color: Color.black.opacity(0.32), radius: 24, x: 0, y: 0)
+        Circle()
+          .fill(
+            RadialGradient(
+              gradient: Gradient(colors: [ Color.white.opacity(0.0625), knobColor.opacity(1.0), Color.black.opacity(0.0625) ]),
+              center: UnitPoint(x: 0.3, y: 0.3),
+              startRadius: 5,
+              endRadius: 50
+            )
+          )
+          .frame(width: knobSize, height: knobSize)
+          .offset(x: position.x, y: position.y)
+          .scaleEffect(isDragging ? 1.0625 : 1.0)
+          .animation(.easeInOut(duration: 0.125), value: isDragging)
+      }
+      .gesture(
+        DragGesture(minimumDistance: 0)
+          .onChanged { value in handleMouseInput(value) }
+          .onEnded { _ in handleMouseEnd() }
+      )
+      .onTapGesture(count: 2) {
+        joystick.resetPosition()
+      }
+    }
+    .onAppear {
+      startContinuousUpdates()
+      if let window = NSApp.windows.first {
+        window.makeKeyAndOrderFront(nil)
+        window.ignoresMouseEvents = false
+        window.acceptsMouseMovedEvents = true
+      }
+    }
+    .onDisappear { cleanup() }
+    .padding(.bottom, 64)
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyDown"))) { notif in
+      if let key = notif.userInfo?["keyCode"] as? UInt16 {
+          pressedKeys.insert(key)
+          if let dir = directionFromKeys() {
+              handleKeyboardInput(dir)
+          }
+      }
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyUp"))) { notif in
+        if let key = notif.userInfo?["keyCode"] as? UInt16 {
+            pressedKeys.remove(key)
+            if let dir = directionFromKeys() {
+                handleKeyboardInput(dir)
+            } else {
+                handleMouseEnd()
+            }
+        }
+    }
+    }
+
+
+
+
+
+  private func handleKeyboardInput(_ direction: CGPoint) {
+    isDragging = true
+    position = direction
+    notifyPositionChange()
+  }
+
+
+
+  
+  private func handleMouseInput(_ value: DragGesture.Value) {
+    if !isDragging { isDragging = true }
+    let currentLocation = value.location
+    let centerOffset = CGPoint(
+      x: currentLocation.x - washerSize / 2,
+      y: currentLocation.y - washerSize / 2
+    )
+    let distance = sqrt(pow(centerOffset.x, 2) + pow(centerOffset.y, 2))
+    if distance <= maxDistance {
+      position = centerOffset
+    } else {
+      let angle = atan2(centerOffset.y, centerOffset.x)
+      position = CGPoint(
+        x: cos(angle) * maxDistance,
+        y: sin(angle) * maxDistance
+      )
+    }
+    notifyPositionChange()
+  }
+  
+  private func handleMouseEnd() {
+    isDragging = false
+    withAnimation(.easeOut(duration: snapBackSpeed)) {
+      position = .zero
+    }
+  }
+  
+  private func cleanup() { stopContinuousUpdates() }
+  
+  private func notifyPositionChange() { onPositionChanged(position) }
+  
+  private func startContinuousUpdates() {
+    stopContinuousUpdates()
+    ValueUpdateTimer = Timer.scheduledTimer(withTimeInterval: updateInterval, repeats: true) { _ in
+      notifyPositionChange()
+    }
+  }
+  
+  private func stopContinuousUpdates() {
+    ValueUpdateTimer?.invalidate()
+    ValueUpdateTimer = nil
+  }
+}
+
+struct VirtualJoystickSettingsView: View {
+  @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
+  
+  var body: some View {
+    VStack(alignment: .leading, spacing: 20) {
+      Text("Virtual Joystick Settings")
+        .font(.title2)
+        .fontWeight(.semibold)
+      Text("Configure virtual joysticks for outputting pan and tilt movements.")
+        .font(.body)
+        .foregroundColor(.secondary)
+      Divider()
+      VStack(alignment: .leading, spacing: 16) {
+        HStack {
+          Text("Number of Joysticks:")
+            .font(.headline)
+          Button(action: {
+            if virtualjoysticks.numberOfJoysticks > 1 {
+              virtualjoysticks.numberOfJoysticks -= 1
+            }
+          }) {
+            Text("-")
+              .font(.title2)
+              .frame(width: 18, height: 18)
+          }
+          .padding(8)
+          Text("\(virtualjoysticks.numberOfJoysticks)")
+            .font(.title2)
+            .frame(width: 16)
+          Button(action: {
+            if virtualjoysticks.numberOfJoysticks < 8 {
+              virtualjoysticks.numberOfJoysticks += 1
+            }
+          }) {
+            Text("+")
+              .font(.title2)
+              .frame(width: 18, height: 18)
+          }
+          .padding(8)
+          Spacer()
+        }
+      }
+      VStack(alignment: .leading, spacing: 16) {
+        TabView {
+          ForEach(virtualjoysticks.joystickInstances) { joy in
+            JoystickTab(joy: joy)
+              .tabItem { Text("Joy \(joy.number)") }
+          }
+          .frame(height: 72)
+          .tabViewStyle(DefaultTabViewStyle())
+        }
+        Spacer()
+      }
+    }
+    .padding()
+    .frame(maxWidth: .infinity, alignment: .leading)
+  }
+}
+
+struct JoystickTab: View {
+  @ObservedObject var joy: VIRTUALJOYSTICKS.JOY
+  
+  var body: some View {
+    VStack(alignment: .leading, spacing: 4) {
+      HStack {
+        Text("Invert X / Pan:")
+        Toggle(isOn: $joy.invertX, label: {})
+        Spacer().frame(width: 48)
+        Text("Invert Y / Tilt:")
+        Toggle(isOn: $joy.invertY, label: {})
+        Spacer()
+      }
+      .padding(8)
+      HStack {
+        Text("Sensitivity:")
+          .frame(width: 112, alignment: .leading)
+        Slider(value: $joy.sensitivity, in: 0.0001...0.0100)
+          .frame(width: 256)
+        Text(String(format: "%.2f", joy.sensitivity * 1000))
+        Spacer()
+      }
+      .padding(8)
+      HStack {
+        Text("Deadzone:")
+          .frame(width: 112, alignment: .leading)
+        Slider(value: $joy.deadzone, in: 0.0...1.0)
+          .frame(width: 256)
+        Text(String(format: "%.2f", joy.deadzone))
+        Spacer()
+      }
+      .padding(8)
+    }
+    .padding()
+    .cornerRadius(8)
+  }
+}
