@@ -24,11 +24,11 @@ class TranslationLogic {
     let x = Double(position.x)
     let y = Double(position.y)
     
-    // Hämta invert-inställningar och applicera INNAN beräkning
-    let adjustedX = joystick.invertX ? x : -x // invertera x redan från början ...DOUBLE INVERSION!
+    // Hämta invert-inställningar och applicera INNAN beräkning och invertera x redan från början ...DOUBLE INVERSION!
+    let adjustedX = joystick.invertX ? x : -x 
     let adjustedY = joystick.invertY ? -y : y
     
-    // Använd de justerade värdena för delta-beräkning, hämta sensitivity från VirtualJoystickManager
+     // Använd de justerade värdena för delta-beräkning, hämta sensitivity från VirtualJoystickManager
     let deltaX = adjustedX * joystick.sensitivity
     let deltaY = adjustedY * joystick.sensitivity
     
@@ -39,17 +39,55 @@ class TranslationLogic {
     // Clampa värdena mellan -1.0 och +1.0
     joystick.X = max(-1.0, min(1.0, joystick.X))
     joystick.Y = max(-1.0, min(1.0, joystick.Y))
-    
+
     // PAN:
-    let pan = -atan2(joystick.X, joystick.Y) * 180.0 / .pi // Beräkna pan med atan2 (negativ för korrekt riktning)
-    var magnitude = sqrt(joystick.X * joystick.X + joystick.Y * joystick.Y) // Beräkna magnitude och begränsa till 1.0
-    if magnitude > 1.0 { magnitude = 1.0 }
-    
+    let panDegree = -atan2(joystick.X, joystick.Y) * 180.0 / .pi // Konvertera till grader
+    let rotationPan = panDegree + joystick.rotationOffset // Lägg till rotation offset
+    var delta = rotationPan - joystick.deltaPan // Räkna ut skillnaden mot förra pan-värdet
+    joystick.deltaPan = rotationPan // Spara aktuellt pan-värde för nästa gång
+    if delta > 180.0 { delta -= 360.0 } // Justera för wrap över -180/+180
+    else if delta < -180.0 { delta += 360.0 } // Justera för wrap över -180/+180
+    joystick.accumulatedPan += delta // Ackumulera pan
+    var pan = joystick.accumulatedPan // Använd accumulatedPan som pan-värde
+    let prevPan = joystick.lastPan // Spara förra panOut
+    joystick.lastPan = pan // Spara aktuellt pan-värde för nästa gång
+
+    // FOLDOVER STATE-MASCHINE // Normalt läge
+    if !joystick.flip {
+        if pan < joystick.minPan && prevPan >= joystick.minPan { // Gå in i flip om vi går under minPan (medsols)
+            joystick.accumulatedPan += 360.0
+            pan = joystick.accumulatedPan
+            joystick.flip = true
+        }
+        else if pan > joystick.maxPan && prevPan <= joystick.maxPan { // Gå in i flip om vi går över maxPan (motsols)
+            joystick.accumulatedPan -= 360.0
+            pan = joystick.accumulatedPan
+            joystick.flip = true
+        }
+    } 
+
+    // FOLDOVER STATE-MASCHINE // Flip-läge:
+    else {
+        if pan < joystick.minPan && prevPan >= joystick.minPan { // Gå ur flip om vi går under minPan (motsols)
+            joystick.accumulatedPan += 360.0
+            pan = joystick.accumulatedPan
+            joystick.flip = false
+        }
+        else if pan > joystick.maxPan && prevPan <= joystick.maxPan { // Gå ur flip om vi går över maxPan (medsols)
+            joystick.accumulatedPan -= 360.0
+            pan = joystick.accumulatedPan
+            joystick.flip = false
+        }
+    }
+
     // TILT:
-    let tilt = magnitude * 90.0 // Konvertera magnitude till tilt (0-90°)
+    var magnitude = sqrt(joystick.X * joystick.X + joystick.Y * joystick.Y)
+    if magnitude > 1.0 { magnitude = 1.0 }
+    var tilt = joystick.minTilt + magnitude * (joystick.maxTilt - joystick.minTilt)
+    if joystick.flip { tilt = -tilt } // Invertera tilt om vi är i foldover-mode  
     
     // Returnera...
     return PanTiltResult(pan: pan, tilt: tilt)
-    
+  
   }
 }

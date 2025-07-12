@@ -56,9 +56,16 @@ class VIRTUALJOYSTICKS: ObservableObject {
     @Published var invertY: Bool = false
     @Published var deadzone: Double = 0.1
     @Published var damping: Double = 0.8
+
+    @Published var minPan: Double = -270
+    @Published var maxPan: Double = 270
+    @Published var minTilt: Double = 0
+    @Published var maxTilt: Double = 90
+    @Published var allowFoldover: Bool = true
+    @Published var invertAtFoldover: Bool = true
     
-    @Published var X: Double = 0.0
-    @Published var Y: Double = 0.0
+    @Published var X: Double = 0.0 // Aktuell joystick position X
+    @Published var Y: Double = 0.0 // Aktuell joystick position Y
     
     @Published var oscEnabled: Bool = false
     @Published var oscPanAddress: String = "/fixture/selected/overrides/panAngle"
@@ -69,13 +76,38 @@ class VIRTUALJOYSTICKS: ObservableObject {
     @Published var tiltOffset: Double = 0.0
     
     @Published var midiEnabled: Bool = false
-    @Published var midiChannel: Int = 1
+    @Published var midiCHX: Int = 1
     @Published var midiCCX: Int = 1
+    @Published var midiCHY: Int = 1
     @Published var midiCCY: Int = 2
+
+    @Published var pan: Double = 0.0 // Aktuellt pan-värde
+    @Published var tilt: Double = 0.0 // Aktuellt tilt-värde
+
+    @Published var accumulatedPan: Double = 0.0 // Behövs om du vill kunna snurra flera varv och hantera flip korrekt.
+    var deltaPan: Double = 0.0 // Behövs för att räkna ut delta mellan nuvarande och förra pan-värdet (för att veta när du passerar gränser).
+
+    @Published var flip: Bool = false
+    @Published var allowFlip: Bool = true
+
+    @Published var lastPan: Double = 0 // Behövs för att veta om du passerat en gräns (för att toggla flip).
+
+    @Published var rotationOffset: Double = 0 // Rotation offset i grader, används för att justera pan-värdet
+
+    
+
+
+
     
     func resetPosition() {
       self.X = 0.0
       self.Y = 0.0
+      self.accumulatedPan = 0.0
+      self.deltaPan = 0.0
+      self.lastPan = 0.0
+      self.pan = 0.0
+      self.tilt = 0.0
+      self.flip = false
       self.osc.sendPanTilt(
         panAddress: self.oscPanAddress,
         panValue: 0,
@@ -83,12 +115,12 @@ class VIRTUALJOYSTICKS: ObservableObject {
         tiltValue: 0
       )
       self.midi.sendControlChange(
-        channel: Int(self.midiChannel),
+        channel: Int(self.midiCHX),
         controller: Int(self.midiCCX),
         value: Int(0)
       )
       self.midi.sendControlChange(
-        channel: Int(self.midiChannel),
+        channel: Int(self.midiCHY),
         controller: Int(self.midiCCY),
         value: Int(0)
       )
@@ -145,30 +177,29 @@ struct JoystickWidget: View {
   var body: some View {
     VStack(spacing: 16) {
       ZStack {
-        Circle()
-          .fill(Color.white.opacity(0.0625))
-          .frame(width: washerSize, height: washerSize)
-        Circle()
-          .fill(knobColor)
-          .frame(width: knobSize, height: knobSize)
-          .offset(x: position.x, y: position.y)
-          .scaleEffect(isDragging ? 1.0625 : 1.0)
-          .animation(.easeInOut(duration: 0.125), value: isDragging)
-          .shadow(color: Color.black.opacity(0.32), radius: 24, x: 0, y: 0)
-        Circle()
-          .fill(
-            RadialGradient(
-              gradient: Gradient(colors: [ Color.white.opacity(0.0625), knobColor.opacity(1.0), Color.black.opacity(0.0625) ]),
-              center: UnitPoint(x: 0.3, y: 0.3),
-              startRadius: 5,
-              endRadius: 50
-            )
-          )
-          .frame(width: knobSize, height: knobSize)
-          .offset(x: position.x, y: position.y)
-          .scaleEffect(isDragging ? 1.0625 : 1.0)
-          .animation(.easeInOut(duration: 0.125), value: isDragging)
+
+      Circle() // Washer
+        .fill(Color.white.opacity(0.0625))
+        .stroke(Color.gray.opacity(0.03125), lineWidth: 5)
+        .frame(width: washerSize, height: washerSize)
+      
+      Circle() // Knob (cut-out)
+        .frame(width: knobSize, height: knobSize)
+        .offset(x: position.x, y: position.y)
+        .blendMode(.destinationOut)
+        .scaleEffect(isDragging ? 1.0625 : 1.0)
+        .animation(.easeInOut(duration: 0.125), value: isDragging)
+        .overlay(
+          Circle()
+            .fill(Color.white.opacity(0.125))
+            .stroke(Color.gray.opacity(0.03125), lineWidth: 5)
+            .frame(width: knobSize, height: knobSize)
+            .offset(x: position.x, y: position.y)
+            .scaleEffect(isDragging ? 1.0625 : 1.0)
+            .animation(.easeInOut(duration: 0.125), value: isDragging)
+        )
       }
+      .compositingGroup()
       .gesture(
         DragGesture(minimumDistance: 0)
           .onChanged { value in handleMouseInput(value) }
@@ -189,16 +220,22 @@ struct JoystickWidget: View {
     .onDisappear { cleanup() }
     .padding(.bottom, 64)
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyDown"))) { notif in
-      if let key = notif.userInfo?["keyCode"] as? UInt16 {
-          pressedKeys.insert(key)
-          if let dir = directionFromKeys() {
-              handleKeyboardInput(dir)
-          }
-      }
+        if let key = notif.userInfo?["keyCode"] as? UInt16 {
+            if key == 49 { // Spacebar
+                joystick.resetPosition()
+                return
+            }
+            pressedKeys.insert(key)
+            if let dir = directionFromKeys() {
+                handleKeyboardInput(dir)
+            }
+        }
     }
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyUp"))) { notif in
         if let key = notif.userInfo?["keyCode"] as? UInt16 {
             pressedKeys.remove(key)
+            // joystick.pressedKeys = pressedKeys
+            // joystick.flipLockedKeys.remove(key)
             if let dir = directionFromKeys() {
                 handleKeyboardInput(dir)
             } else {
@@ -206,7 +243,7 @@ struct JoystickWidget: View {
             }
         }
     }
-    }
+  }
 
 
 
@@ -222,7 +259,11 @@ struct JoystickWidget: View {
 
   
   private func handleMouseInput(_ value: DragGesture.Value) {
-    if !isDragging { isDragging = true }
+    if !isDragging {
+      isDragging = true 
+//      joystick.isDragging = true
+//      joystick.flipLockedWhileDragging = false
+    }
     let currentLocation = value.location
     let centerOffset = CGPoint(
       x: currentLocation.x - washerSize / 2,
@@ -243,6 +284,8 @@ struct JoystickWidget: View {
   
   private func handleMouseEnd() {
     isDragging = false
+//    joystick.isDragging = false
+//    joystick.flipLockedWhileDragging = false
     withAnimation(.easeOut(duration: snapBackSpeed)) {
       position = .zero
     }

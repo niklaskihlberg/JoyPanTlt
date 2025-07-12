@@ -75,7 +75,15 @@ struct ContentView: View {
               if sqrt(position.x * position.x + position.y * position.y) < deadzone {
                 return
               }
+
+
+
+//              let value = TranslationLogic.convertJoystickToPanTilt(position, for: joystick, pressedKeys: joystick.pressedKeys)
               let value = TranslationLogic.convertJoystickToPanTilt(position, for: joystick)
+
+              joystick.pan = value.pan
+              joystick.tilt = value.tilt
+
               osc.sendPanTilt(
                 panAddress: joystick.oscPanAddress,
                 panValue: value.pan,
@@ -83,12 +91,12 @@ struct ContentView: View {
                 tiltValue: value.tilt
               )
               midi.sendControlChange(
-                channel: Int(joystick.midiChannel),
+                channel: Int(joystick.midiCHX),
                 controller: Int(joystick.midiCCX),
                 value: Int(value.pan)
               )
               midi.sendControlChange(
-                channel: Int(joystick.midiChannel),
+                channel: Int(joystick.midiCHY),
                 controller: Int(joystick.midiCCY),
                 value: Int(value.tilt)
               )
@@ -114,3 +122,9 @@ func calculateColumns(for joystickCount: Int) -> Int {
   }
 }
 
+#Preview {
+  ContentView()
+    .environmentObject(VIRTUALJOYSTICKS())
+    .environmentObject(OSC())
+    .environmentObject(MIDI())
+}

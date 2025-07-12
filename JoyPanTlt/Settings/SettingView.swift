@@ -18,12 +18,16 @@ struct SettingsView: View {
     case virtualJoystick = "Virtual Joystick"
     case osc = "OSC"
     case midi = "MIDI"
+    case fixture = "Fixture"
+    case visualization = "Visualization"
     
     var icon: String {
       switch self {
       case .virtualJoystick: return "dot.circle.and.hand.point.up.left.fill"
       case .osc: return "network"
       case .midi: return "pianokeys"
+      case .fixture: return "slider.horizontal.3"
+      case .visualization: return "photo.on.rectangle.angled"
       }
     }
   }
@@ -45,6 +49,8 @@ struct SettingsView: View {
         case .virtualJoystick: VirtualJoystickSettingsView()
         case .osc: OSCSettingsView()
         case .midi: MIDISettingsView()
+        case .fixture: FixtureSettingsView()
+        case .visualization: VisualizationView()
         }
       }
       .frame(minWidth: 360, minHeight: 340)

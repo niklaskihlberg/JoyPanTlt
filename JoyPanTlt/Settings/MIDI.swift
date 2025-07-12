@@ -233,8 +233,34 @@ struct MIDISettingsView: View {
     private func joystickMidiTab(for index: Int) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("X/Pan MIDI CC:")
-                    .frame(width: 112, alignment: .leading)
+                Text("X/Pan MIDI Ch:")
+                    .frame(width: 112, alignment: .trailing)
+
+                TextField(
+                    "1",
+                    text: Binding<String>(
+                        get: { String(virtualjoysticks.joystickInstances[index].midiCHX) },
+                        set: { newValue in
+                            let trimmed = newValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                            let intValue: Int?
+                            if trimmed.hasPrefix("0x") || trimmed.hasPrefix("0X") {
+                                intValue = Int(trimmed.dropFirst(2), radix: 16)
+                            } else {
+                                intValue = Int(trimmed)
+                            }
+                            if let value = intValue {
+                                virtualjoysticks.joystickInstances[index].midiCHX = min(max(value, 1), 16)
+                            }
+                        }
+                    )
+                )
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .monospaced()
+                .frame(width: 40)
+
+                Text("CC:")
+                    .frame(width: 48, alignment: .trailing)
+
                 TextField(
                     "1",
                     text: Binding<String>(
@@ -255,12 +281,38 @@ struct MIDISettingsView: View {
                 )
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .monospaced()
-                .frame(width: 56)
+                .frame(width: 48)
                 Spacer()
             }
             HStack {
-                Text("Y/Tilt MIDI CC:")
-                    .frame(width: 112, alignment: .leading)
+                Text("Y/Tilt MIDI Ch:")
+                    .frame(width: 112, alignment: .trailing)
+
+                TextField(
+                    "1",
+                    text: Binding<String>(
+                        get: { String(virtualjoysticks.joystickInstances[index].midiCHY) },
+                        set: { newValue in
+                            let trimmed = newValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                            let intValue: Int?
+                            if trimmed.hasPrefix("0x") || trimmed.hasPrefix("0X") {
+                                intValue = Int(trimmed.dropFirst(2), radix: 16)
+                            } else {
+                                intValue = Int(trimmed)
+                            }
+                            if let value = intValue {
+                                virtualjoysticks.joystickInstances[index].midiCHY = min(max(value, 1), 16)
+                            }
+                        }
+                    )
+                )
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .monospaced()
+                .frame(width: 40)
+
+                Text("CC:")
+                    .frame(width: 48, alignment: .trailing)
+
                 TextField(
                     "2",
                     text: Binding<String>(
@@ -281,7 +333,7 @@ struct MIDISettingsView: View {
                 )
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .monospaced()
-                .frame(width: 56)
+                .frame(width: 48)
                 Spacer()
             }
         }
