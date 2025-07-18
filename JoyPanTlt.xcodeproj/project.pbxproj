@@ -1,0 +1,549 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		850528332E195B90002A43AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8505281C2E195B8E002A43AB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 850528232E195B8E002A43AB;
+			remoteInfo = JoyPanTlt;
+		};
+		8505283D2E195B90002A43AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8505281C2E195B8E002A43AB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 850528232E195B8E002A43AB;
+			remoteInfo = JoyPanTlt;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		850528242E195B8E002A43AB /* JoyPanTlt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JoyPanTlt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		850528322E195B90002A43AB /* JoyPanTltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoyPanTltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8505283C2E195B90002A43AB /* JoyPanTltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JoyPanTltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		856566272E23F7F0005C7EC1 /* Exceptions for "JoyPanTlt" folder in "JoyPanTlt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 850528232E195B8E002A43AB /* JoyPanTlt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		850528262E195B8E002A43AB /* JoyPanTlt */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				856566272E23F7F0005C7EC1 /* Exceptions for "JoyPanTlt" folder in "JoyPanTlt" target */,
+			);
+			path = JoyPanTlt;
+			sourceTree = "<group>";
+		};
+		850528352E195B90002A43AB /* JoyPanTltTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JoyPanTltTests;
+			sourceTree = "<group>";
+		};
+		8505283F2E195B90002A43AB /* JoyPanTltUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JoyPanTltUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		850528212E195B8E002A43AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8505281B2E195B8E002A43AB = {
+			isa = PBXGroup;
+			children = (
+				850528262E195B8E002A43AB /* JoyPanTlt */,
+				850528352E195B90002A43AB /* JoyPanTltTests */,
+				8505283F2E195B90002A43AB /* JoyPanTltUITests */,
+				850528252E195B8E002A43AB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		850528252E195B8E002A43AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				850528242E195B8E002A43AB /* JoyPanTlt.app */,
+				850528322E195B90002A43AB /* JoyPanTltTests.xctest */,
+				8505283C2E195B90002A43AB /* JoyPanTltUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		850528232E195B8E002A43AB /* JoyPanTlt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 850528462E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTlt" */;
+			buildPhases = (
+				850528202E195B8E002A43AB /* Sources */,
+				850528212E195B8E002A43AB /* Frameworks */,
+				850528222E195B8E002A43AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				850528262E195B8E002A43AB /* JoyPanTlt */,
+			);
+			name = JoyPanTlt;
+			packageProductDependencies = (
+			);
+			productName = JoyPanTlt;
+			productReference = 850528242E195B8E002A43AB /* JoyPanTlt.app */;
+			productType = "com.apple.product-type.application";
+		};
+		850528312E195B90002A43AB /* JoyPanTltTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 850528492E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTltTests" */;
+			buildPhases = (
+				8505282E2E195B90002A43AB /* Sources */,
+				850528302E195B90002A43AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				850528342E195B90002A43AB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				850528352E195B90002A43AB /* JoyPanTltTests */,
+			);
+			name = JoyPanTltTests;
+			packageProductDependencies = (
+			);
+			productName = JoyPanTltTests;
+			productReference = 850528322E195B90002A43AB /* JoyPanTltTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8505283B2E195B90002A43AB /* JoyPanTltUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8505284C2E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTltUITests" */;
+			buildPhases = (
+				850528382E195B90002A43AB /* Sources */,
+				8505283A2E195B90002A43AB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8505283E2E195B90002A43AB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8505283F2E195B90002A43AB /* JoyPanTltUITests */,
+			);
+			name = JoyPanTltUITests;
+			packageProductDependencies = (
+			);
+			productName = JoyPanTltUITests;
+			productReference = 8505283C2E195B90002A43AB /* JoyPanTltUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8505281C2E195B8E002A43AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					850528232E195B8E002A43AB = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					850528312E195B90002A43AB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 850528232E195B8E002A43AB;
+					};
+					8505283B2E195B90002A43AB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 850528232E195B8E002A43AB;
+					};
+				};
+			};
+			buildConfigurationList = 8505281F2E195B8E002A43AB /* Build configuration list for PBXProject "JoyPanTlt" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8505281B2E195B8E002A43AB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 850528252E195B8E002A43AB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				850528232E195B8E002A43AB /* JoyPanTlt */,
+				850528312E195B90002A43AB /* JoyPanTltTests */,
+				8505283B2E195B90002A43AB /* JoyPanTltUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		850528222E195B8E002A43AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		850528302E195B90002A43AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8505283A2E195B90002A43AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		850528202E195B8E002A43AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8505282E2E195B90002A43AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		850528382E195B90002A43AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		850528342E195B90002A43AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 850528232E195B8E002A43AB /* JoyPanTlt */;
+			targetProxy = 850528332E195B90002A43AB /* PBXContainerItemProxy */;
+		};
+		8505283E2E195B90002A43AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 850528232E195B8E002A43AB /* JoyPanTlt */;
+			targetProxy = 8505283D2E195B90002A43AB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		850528442E195B90002A43AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		850528452E195B90002A43AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		850528472E195B90002A43AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JoyPanTlt/JoyPanTlt.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = /Users/niklas/Xcode/JoyPanTlt/JoyPanTlt/Info.plist;
+				INFOPLIST_KEY_GCSupportsControllerUserInteraction = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTlt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		850528482E195B90002A43AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JoyPanTlt/JoyPanTlt.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = /Users/niklas/Xcode/JoyPanTlt/JoyPanTlt/Info.plist;
+				INFOPLIST_KEY_GCSupportsControllerUserInteraction = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTlt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8505284A2E195B90002A43AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JoyPanTlt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JoyPanTlt";
+			};
+			name = Debug;
+		};
+		8505284B2E195B90002A43AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JoyPanTlt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JoyPanTlt";
+			};
+			name = Release;
+		};
+		8505284D2E195B90002A43AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = JoyPanTlt;
+			};
+			name = Debug;
+		};
+		8505284E2E195B90002A43AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Niklas.JoyPanTltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = JoyPanTlt;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8505281F2E195B8E002A43AB /* Build configuration list for PBXProject "JoyPanTlt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				850528442E195B90002A43AB /* Debug */,
+				850528452E195B90002A43AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		850528462E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTlt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				850528472E195B90002A43AB /* Debug */,
+				850528482E195B90002A43AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		850528492E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTltTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8505284A2E195B90002A43AB /* Debug */,
+				8505284B2E195B90002A43AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8505284C2E195B90002A43AB /* Build configuration list for PBXNativeTarget "JoyPanTltUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8505284D2E195B90002A43AB /* Debug */,
+				8505284E2E195B90002A43AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8505281C2E195B8E002A43AB /* Project object */;
+}

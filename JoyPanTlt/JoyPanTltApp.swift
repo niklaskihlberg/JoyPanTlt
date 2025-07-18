@@ -22,6 +22,7 @@ struct JoyPanTltApp: App {
   @StateObject private var virtualjoysticks = VIRTUALJOYSTICKS()  // Create and own the virtual joysticks
   @StateObject private var osc = OSC()  // Create and own the OSC backend)
   @StateObject private var midi = MIDI()  // Create and own the MIDI backend
+  @StateObject private var gamepad = GAMEPAD()  // Create and own the Gamepad manager
   
   var body: some Scene {
     
@@ -30,7 +31,9 @@ struct JoyPanTltApp: App {
         .environmentObject(virtualjoysticks)  // Inject the virtual joysticks into the environment
         .environmentObject(osc)  // Inject the OSC backend into the environment
         .environmentObject(midi)  // Inject the MIDI backend into the environment
+        .environmentObject(gamepad)  // Inject the Gamepad manager into the environment
         .onAppear {
+          
           // Försök hitta huvudfönstret och sätt storlek
           if let window = NSApplication.shared.windows.first {
             window.setContentSize(NSSize(width: 256, height: 256))
@@ -51,6 +54,7 @@ struct JoyPanTltApp: App {
         .environmentObject(virtualjoysticks)
         .environmentObject(osc)
         .environmentObject(midi)
+        .environmentObject(gamepad)
     }
   }
 }

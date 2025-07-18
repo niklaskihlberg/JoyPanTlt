@@ -342,9 +342,4 @@ struct MIDISettingsView: View {
     }
 }
 
-#Preview {
-  MIDISettingsView()
-    .environmentObject(MIDI())
-    .environmentObject(VIRTUALJOYSTICKS())
-    .frame(width: 500, height: 500)
-}
+

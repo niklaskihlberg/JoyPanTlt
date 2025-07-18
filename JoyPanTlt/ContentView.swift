@@ -35,6 +35,7 @@ struct ContentView: View {
   @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
   @EnvironmentObject var osc: OSC
   @EnvironmentObject var midi: MIDI
+  @EnvironmentObject var gamepad: GAMEPAD
   
   var body: some View {
 
@@ -69,16 +70,17 @@ struct ContentView: View {
           columns: Array(repeating: GridItem(.flexible(), spacing: 32), count: columns),
           spacing: 32
         ) {
+          
           ForEach(Array(virtualjoysticks.joystickInstances.enumerated()), id: \.element.id) { index, joystick in
+            
+            
             JoystickWidget(index: index, joystick: joystick) { position in
+
               let deadzone = joystick.deadzone
               if sqrt(position.x * position.x + position.y * position.y) < deadzone {
                 return
               }
 
-
-
-//              let value = TranslationLogic.convertJoystickToPanTilt(position, for: joystick, pressedKeys: joystick.pressedKeys)
               let value = TranslationLogic.convertJoystickToPanTilt(position, for: joystick)
 
               joystick.pan = value.pan
@@ -122,9 +124,10 @@ func calculateColumns(for joystickCount: Int) -> Int {
   }
 }
 
-#Preview {
-  ContentView()
-    .environmentObject(VIRTUALJOYSTICKS())
-    .environmentObject(OSC())
-    .environmentObject(MIDI())
-}
+// #Preview {
+//   ContentView()
+//     .environmentObject(VIRTUALJOYSTICKS())
+//     .environmentObject(OSC())
+//     .environmentObject(MIDI())
+//     .environmentObject(GAMEPAD())
+// }

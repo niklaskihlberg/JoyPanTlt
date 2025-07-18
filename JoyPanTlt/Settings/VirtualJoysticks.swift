@@ -40,8 +40,6 @@ class VIRTUALJOYSTICKS: ObservableObject {
   }
   
   class JOY: ObservableObject, Identifiable {
-    @EnvironmentObject var osc: OSC
-    @EnvironmentObject var midi: MIDI
     
     @Published var id = UUID()
     @Published var name: String
@@ -94,12 +92,14 @@ class VIRTUALJOYSTICKS: ObservableObject {
 
     @Published var rotationOffset: Double = 0 // Rotation offset i grader, används för att justera pan-värdet
 
-    
-
-
+    @Published var inputMappings: [GamepadInput: JoystickAction] = [:]
 
     
-    func resetPosition() {
+
+
+
+    
+    func resetPosition(osc: OSC, midi: MIDI) {
       self.X = 0.0
       self.Y = 0.0
       self.accumulatedPan = 0.0
@@ -108,18 +108,18 @@ class VIRTUALJOYSTICKS: ObservableObject {
       self.pan = 0.0
       self.tilt = 0.0
       self.flip = false
-      self.osc.sendPanTilt(
+      osc.sendPanTilt(
         panAddress: self.oscPanAddress,
         panValue: 0,
         tiltAddress: self.oscTiltAddress,
         tiltValue: 0
       )
-      self.midi.sendControlChange(
+      midi.sendControlChange(
         channel: Int(self.midiCHX),
         controller: Int(self.midiCCX),
         value: Int(0)
       )
-      self.midi.sendControlChange(
+      midi.sendControlChange(
         channel: Int(self.midiCHY),
         controller: Int(self.midiCCY),
         value: Int(0)
@@ -130,38 +130,33 @@ class VIRTUALJOYSTICKS: ObservableObject {
 
 struct JoystickWidget: View {
 
+  @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
+  @EnvironmentObject var osc: OSC
+  @EnvironmentObject var midi: MIDI
+  @EnvironmentObject var gamepad: GAMEPAD
+
   @State private var pressedKeys = Set<UInt16>()
 
-  private func directionFromKeys() -> CGPoint? {
-    var dx: CGFloat = 0
-    var dy: CGFloat = 0
-    if pressedKeys.contains(123) { dx -= 1 } // vänster
-    if pressedKeys.contains(124) { dx += 1 } // höger
-    if pressedKeys.contains(125) { dy += 1 } // ner
-    if pressedKeys.contains(126) { dy -= 1 } // upp
-    if dx == 0 && dy == 0 { return nil }
-    let length = sqrt(dx*dx + dy*dy)
-    return CGPoint(x: dx/length * maxDistance, y: dy/length * maxDistance)
-  }
+  
 
-
-  @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
   let index: Int
+
   @ObservedObject var joystick: VIRTUALJOYSTICKS.JOY
+
   let onPositionChanged: (CGPoint) -> Void
   
   @State private var position: CGPoint = .zero
   @State private var isDragging: Bool = false
   @State private var ValueUpdateTimer: Timer?
   
-  let washerSize: Double = 145
-  let knobSize: Double = 90
+  static let washerSize: Double = 145
+  static let knobSize: Double = 90
   let snapBackSpeed: Double = 0.25
   
   private var knobColor: Color { Color.gray }
   private var updateInterval: TimeInterval = 0.05
-  private var radius: CGFloat { washerSize / 2 }
-  private var knobRadius: CGFloat { knobSize / 2 }
+  private var radius: CGFloat { JoystickWidget.washerSize / 2 }
+  private var knobRadius: CGFloat { JoystickWidget.knobSize / 2 }
   private var maxDistance: CGFloat { radius - knobRadius }
   
   init(
@@ -181,10 +176,10 @@ struct JoystickWidget: View {
       Circle() // Washer
         .fill(Color.white.opacity(0.0625))
         .stroke(Color.gray.opacity(0.03125), lineWidth: 5)
-        .frame(width: washerSize, height: washerSize)
+        .frame(width: JoystickWidget.washerSize, height: JoystickWidget.washerSize)
       
       Circle() // Knob (cut-out)
-        .frame(width: knobSize, height: knobSize)
+          .frame(width: JoystickWidget.knobSize, height: JoystickWidget.knobSize)
         .offset(x: position.x, y: position.y)
         .blendMode(.destinationOut)
         .scaleEffect(isDragging ? 1.0625 : 1.0)
@@ -193,7 +188,7 @@ struct JoystickWidget: View {
           Circle()
             .fill(Color.white.opacity(0.125))
             .stroke(Color.gray.opacity(0.03125), lineWidth: 5)
-            .frame(width: knobSize, height: knobSize)
+            .frame(width: JoystickWidget.knobSize, height: JoystickWidget.knobSize)
             .offset(x: position.x, y: position.y)
             .scaleEffect(isDragging ? 1.0625 : 1.0)
             .animation(.easeInOut(duration: 0.125), value: isDragging)
@@ -206,7 +201,7 @@ struct JoystickWidget: View {
           .onEnded { _ in handleMouseEnd() }
       )
       .onTapGesture(count: 2) {
-        joystick.resetPosition()
+        joystick.resetPosition(osc: osc, midi: midi)
       }
     }
     .onAppear {
@@ -222,7 +217,7 @@ struct JoystickWidget: View {
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyDown"))) { notif in
         if let key = notif.userInfo?["keyCode"] as? UInt16 {
             if key == 49 { // Spacebar
-                joystick.resetPosition()
+                joystick.resetPosition(osc: osc, midi: midi)
                 return
             }
             pressedKeys.insert(key)
@@ -234,8 +229,6 @@ struct JoystickWidget: View {
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("KeyUp"))) { notif in
         if let key = notif.userInfo?["keyCode"] as? UInt16 {
             pressedKeys.remove(key)
-            // joystick.pressedKeys = pressedKeys
-            // joystick.flipLockedKeys.remove(key)
             if let dir = directionFromKeys() {
                 handleKeyboardInput(dir)
             } else {
@@ -243,11 +236,66 @@ struct JoystickWidget: View {
             }
         }
     }
+    // --- NYTT: Reagera på gamepad HID-mapping, momentary ---
+    .onReceive(gamepad.inputEventPublisher) { event in
+        handleGamepadInputEvent(event)
+    }
   }
 
+  // --- NYTT: Hantera momentary gamepad-input ---
+  @State private var activeActions = Set<JoystickAction>()
 
+  private func handleGamepadInputEvent(_ event: GamepadInputEvent) {
+    switch event {
+    case .pressed(let input):
+        if let action = gamepad.inputMappings[input] {
+            activeActions.insert(action)
+            updateJoystickForActiveActions()
+        }
+    case .released(let input):
+        if let action = gamepad.inputMappings[input] {
+            activeActions.remove(action)
+            updateJoystickForActiveActions()
+        }
+    }
+  }
 
+  // Sätt joystick.X/Y beroende på vilka actions som är "aktiva"
+  private func updateJoystickForActiveActions() {
+    var x: Double = 0
+    var y: Double = 0
+    if activeActions.contains(.moveLeft) { x -= 1 }
+    if activeActions.contains(.moveRight) { x += 1 }
+    if activeActions.contains(.moveUp) { y += 1 }
+    if activeActions.contains(.moveDown) { y -= 1 }
+    joystick.X = x
+    joystick.Y = y
+    position = CGPoint(x: joystick.X * maxDistance, y: -joystick.Y * maxDistance)
+    notifyPositionChange()
+    // Reset om reset-action trycks
+    if activeActions.contains(.reset) {
+        joystick.resetPosition(osc: osc, midi: midi)
+        activeActions.remove(.reset)
+    }
+  }
 
+  private func directionFromKeys() -> CGPoint? {
+    var dx: CGFloat = 0
+    var dy: CGFloat = 0
+    if pressedKeys.contains(123) { dx -= 1 } // vänster
+    if pressedKeys.contains(124) { dx += 1 } // höger
+    if pressedKeys.contains(125) { dy += 1 } // ner
+    if pressedKeys.contains(126) { dy -= 1 } // upp
+    if dx == 0 && dy == 0 { return nil }
+    let length = sqrt(dx*dx + dy*dy)
+    return CGPoint(x: dx/length * maxDistance, y: dy/length * maxDistance)
+  }
+
+  private func handleGamepadInput(_ direction: CGPoint) {
+    isDragging = true
+    position = direction
+    notifyPositionChange()
+  }
 
   private func handleKeyboardInput(_ direction: CGPoint) {
     isDragging = true
@@ -255,19 +303,14 @@ struct JoystickWidget: View {
     notifyPositionChange()
   }
 
-
-
-  
   private func handleMouseInput(_ value: DragGesture.Value) {
     if !isDragging {
       isDragging = true 
-//      joystick.isDragging = true
-//      joystick.flipLockedWhileDragging = false
     }
     let currentLocation = value.location
     let centerOffset = CGPoint(
-      x: currentLocation.x - washerSize / 2,
-      y: currentLocation.y - washerSize / 2
+      x: currentLocation.x - JoystickWidget.washerSize / 2,
+      y: currentLocation.y - JoystickWidget.washerSize / 2
     )
     let distance = sqrt(pow(centerOffset.x, 2) + pow(centerOffset.y, 2))
     if distance <= maxDistance {
@@ -284,8 +327,6 @@ struct JoystickWidget: View {
   
   private func handleMouseEnd() {
     isDragging = false
-//    joystick.isDragging = false
-//    joystick.flipLockedWhileDragging = false
     withAnimation(.easeOut(duration: snapBackSpeed)) {
       position = .zero
     }
@@ -308,7 +349,7 @@ struct JoystickWidget: View {
   }
 }
 
-struct VirtualJoystickSettingsView: View {
+struct VirtualJoysticksSettingsView: View {
   @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
   
   var body: some View {

@@ -8,24 +8,31 @@
 import SwiftUI
 
 struct SettingsView: View {
-  @State private var selectedTab: SettingsTab = .virtualJoystick
+  @State private var selectedTab: SettingsTab
+
+  init(selectedTab: SettingsTab = .virtualjoysticks) {
+      _selectedTab = State(initialValue: selectedTab)
+  }
   
   @EnvironmentObject var virtualjoysticks: VIRTUALJOYSTICKS
   @EnvironmentObject var osc: OSC
   @EnvironmentObject var midi: MIDI
+  @EnvironmentObject var gamepad: GAMEPAD
   
   enum SettingsTab: String, CaseIterable {
-    case virtualJoystick = "Virtual Joystick"
+    case virtualjoysticks = "Virtual Joysticks"
     case osc = "OSC"
     case midi = "MIDI"
+    case gamepad = "Gamepad"
     case fixture = "Fixture"
     case visualization = "Visualization"
     
     var icon: String {
       switch self {
-      case .virtualJoystick: return "dot.circle.and.hand.point.up.left.fill"
+      case .virtualjoysticks: return "dot.circle.and.hand.point.up.left.fill"
       case .osc: return "network"
       case .midi: return "pianokeys"
+      case .gamepad: return "gamecontroller.fill"
       case .fixture: return "slider.horizontal.3"
       case .visualization: return "photo.on.rectangle.angled"
       }
@@ -46,9 +53,10 @@ struct SettingsView: View {
       
       Group {
         switch selectedTab {
-        case .virtualJoystick: VirtualJoystickSettingsView()
+        case .virtualjoysticks: VirtualJoysticksSettingsView()
         case .osc: OSCSettingsView()
         case .midi: MIDISettingsView()
+        case .gamepad: GamepadSettingsView()
         case .fixture: FixtureSettingsView()
         case .visualization: VisualizationView()
         }
@@ -59,3 +67,20 @@ struct SettingsView: View {
     .frame(minWidth: 720, maxWidth: 720)
   }
 }
+
+#if DEBUG
+struct SettingsView_Previews: PreviewProvider {
+    class DummyOSC: ObservableObject {}
+    class DummyMIDI: ObservableObject {}
+    // class DummyGamepad: GAMEPAD {}
+
+    static var previews: some View {
+        SettingsView(selectedTab: .gamepad)
+            .environmentObject(VIRTUALJOYSTICKS()) // Använd riktiga klassen här
+            .environmentObject(DummyOSC())
+            .environmentObject(DummyMIDI())
+            .environmentObject(GAMEPAD())
+            .frame(width: 720, height: 400)
+    }
+}
+#endif

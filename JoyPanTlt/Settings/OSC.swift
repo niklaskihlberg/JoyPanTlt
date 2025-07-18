@@ -341,15 +341,4 @@ struct OSCSettingsView: View {
 }
 
 
-struct OSCSettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let osc = OSC()
-        let vjoys = VIRTUALJOYSTICKS()
-        vjoys.numberOfJoysticks = 2 // Visa två joysticks i preview
-        return OSCSettingsView()
-            .environmentObject(osc)
-            .environmentObject(vjoys)
-            .frame(width: 420)
-    }
-}
 

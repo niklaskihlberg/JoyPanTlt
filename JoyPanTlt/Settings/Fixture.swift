@@ -78,15 +78,7 @@ struct FixtureSettingsView: View {
 }
 
 
-struct FixtureSettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let vjoys = VIRTUALJOYSTICKS()
-        vjoys.numberOfJoysticks = 2
-        return FixtureSettingsView()
-            .environmentObject(vjoys)
-            .frame(width: 420)
-    }
-}
+
 
 
 struct PlainText: ViewModifier {
